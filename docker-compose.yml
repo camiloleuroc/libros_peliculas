@@ -1,0 +1,26 @@
+version: '3'
+
+services:
+  # Microservicios
+  microservicios:
+    build:
+      context: .
+    command: python /app/microservicios.py
+    networks:
+      - microservicios_network
+
+  # NGINX API Gateway
+  api_gateway:
+    image: nginx
+    volumes:
+      - ./nginx-config:/etc/nginx/conf.d
+    ports:
+      - "80:80"
+    depends_on:
+      - microservicios
+    networks:
+      - microservicios_network
+
+networks:
+  microservicios_network:
+    driver: bridge
